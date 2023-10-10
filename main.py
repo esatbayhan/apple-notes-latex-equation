@@ -1,10 +1,26 @@
 import pylab
 from Foundation import NSData
 from AppKit import NSPasteboard, NSPasteboardTypeString, NSPasteboardTypePNG, NSPasteboardTypeTIFF
+from argparse import ArgumentParser # https://docs.python.org/3/howto/argparse.html#argparse-tutorial
 
+def get_text_from_clipboard() -> str:
+    """
+    https://stackoverflow.com/a/8317794 (Updated for python3)
+    """
+    pasteboard = NSPasteboard.generalPasteboard()
+    text = pasteboard.stringForType_(NSPasteboardTypeString)
+    return text.strip()
+
+def get_formula_from_text(text: str) -> str:
+    return f"${text}$"
 
 def get_formula_from_input() -> str:
-    return f"${input('formula:')}$"
+    text = input()
+    return get_formula_from_text(text)
+
+def get_formula_from_clipboard() -> str:
+    text = get_text_from_clipboard()
+    return get_formula_from_text(text)
 
 def save_formula_as_image(formula: str, file_path: str) -> str:
     """
@@ -42,21 +58,32 @@ def copy_image_to_clipboard(file_path: str) -> bool:
   pasteboard.clearContents()
   return pasteboard.setData_forType_(image_data, NSPasteboardTypePNG)
 
-def get_text_from_clipboard() -> str:
-    """
-    https://stackoverflow.com/a/8317794 (Updated for python3)
-    """
-    pasteboard = NSPasteboard.generalPasteboard()
-    text = pasteboard.stringForType_(NSPasteboardTypeString)
-    return text.strip()
-
-def get_formula_from_clipboard() -> str:
-    text = get_text_from_clipboard()
-    return f"${text}$"
+def init_argparse() -> ArgumentParser:
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-t",
+        "--text",
+        type=str,
+        help="latex formula given as argument"
+    )
+    parser.add_argument(
+        "-c",
+        "--clipboard",
+        action="store_true",
+        help="latex formula given inside clipboard"
+    )
+    return parser
 
 def main() -> None:
-    # formula = get_formula_from_input() # from user input
-    formula = get_formula_from_clipboard() # from clipboard
+    parser = init_argparse()
+    args = parser.parse_args()
+
+    if args.text:
+        formula = get_formula_from_text(args.text)
+    elif args.clipboard:
+        formula = get_formula_from_clipboard()
+    else:
+        formula = get_formula_from_input()
     save_formula_as_image(formula, "formula.png")
     copy_image_to_clipboard("formula.png")
 

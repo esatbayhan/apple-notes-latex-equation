@@ -5,7 +5,7 @@
 ![Demo](media/demo.gif)
 
 - Write LaTeX equation
-- Select and copy LaTeX equation
+- Select LaTeX equation
 - Press shortcut
 - Paste LaTeX equation as image
 
@@ -16,6 +16,7 @@
 - `pip install -r requirements.txt`
 - Create new shortcut in the Shortcuts App
 - Use `execute shell-script`
+- Select only `Text` as input and `Get clipboard` if there is no input
 - Copy full path of binary `.venv/bin/python` and paste it to `execute shell-script`
 - Copy full path of file `main.py` and paste it after the path of python
 - Choose method
