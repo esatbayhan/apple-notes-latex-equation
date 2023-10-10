@@ -21,6 +21,8 @@
 - Copy full path of file `main.py` and paste it after the path of python
 - Choose method
 
+![Shortcut: Create new shortcut](media/shortcuts-new-shortcut.png)
+
 ### Method 1: Recommended
 
 - Go to shortcut
